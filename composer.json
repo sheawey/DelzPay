@@ -13,7 +13,7 @@
             "email": "sheawey@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "dev-master",
     "autoload": {
         "psr-4": {
             "Delz\\Pay\\": "src/Delz/Pay"
