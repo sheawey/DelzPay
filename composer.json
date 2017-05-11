@@ -1,0 +1,22 @@
+{
+    "name": "delz/pay",
+    "description": "支付网关组件",
+    "type": "library",
+    "require": {
+        "php": ">=7.0.0",
+        "guzzlehttp/guzzle": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "徐威",
+            "email": "sheawey@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Delz\\Pay\\": "src/Delz/Pay"
+        }
+    }
+}
