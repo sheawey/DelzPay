@@ -2,7 +2,6 @@
 
 namespace Delz\Pay\Common\Contract;
 
-use Delz\Common\Model\IParameterAware;
 use Delz\Pay\Common\Exception\InvalidRequestException;
 
 /**
@@ -34,6 +33,5 @@ interface IRequest
      * @return IResponse
      */
     public function send();
-
 
 }
