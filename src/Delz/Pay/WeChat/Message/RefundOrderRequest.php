@@ -33,6 +33,8 @@ class RefundOrderRequest extends Request
     {
         $this->checkRequired('app_id', 'mch_id', 'out_trade_no', 'cert_path', 'key_path');
 
+        $refundAccount = $this->getRefundAccount() ? $this->getRefundAccount() : 'REFUND_SOURCE_UNSETTLED_FUNDS';
+
         $data = array (
             'appid'           => $this->getAppId(),
             'mch_id'          => $this->getMchId(),
@@ -45,6 +47,7 @@ class RefundOrderRequest extends Request
             'refund_fee_type' => $this->getRefundFeeType(),
             'op_user_id'      => $this->getOpUserId() ?: $this->getMchId(),
             'nonce_str'       => md5(uniqid()),
+            'refund_account'  => $refundAccount
         );
         $data = array_filter($data);
         $data['sign'] = Helper::sign($data, $this->getApiKey());
@@ -189,6 +192,26 @@ class RefundOrderRequest extends Request
     public function setKeyPath($keyPath)
     {
         $this->setParameter('key_path', $keyPath);
+    }
+
+    /**
+     * 设置退款资金来源
+     *
+     * @param string $refundAccount
+     */
+    public function setRefundAccount($refundAccount)
+    {
+        $this->setParameter('refund_account', $refundAccount);
+    }
+
+    /**
+     * 获取退款资金来源
+     *
+     * @return string
+     */
+    public function getRefundAccount()
+    {
+        return $this->getParameter('refund_account');
     }
 
 }
