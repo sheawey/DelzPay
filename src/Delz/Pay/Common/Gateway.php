@@ -13,50 +13,16 @@ use Delz\Pay\Common\Exception\PayException;
  */
 abstract  class Gateway implements IGateway
 {
+    use ParameterAware;
+
     /**
      * 网关配置参数
      *
-     * @var array
+     * @param array $parameters
      */
-    protected $parameters = [];
-
-    /**
-     * @return array
-     */
-    public function getParameters()
+    public function __construct(array $parameters = [])
     {
-        return $this->parameters;
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $value
-     */
-    public function setParameter($key, $value)
-    {
-        $this->parameters[$key] = $value;
-    }
-
-    /**
-     * @param string $key
-     * @return mixed|null
-     */
-    public function getParameter($key)
-    {
-        if ($this->hasParameter($key)) {
-            return $this->parameters[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function hasParameter($key)
-    {
-        return isset($this->parameters[$key]);
+        $this->parameters = $parameters;
     }
 
     /**

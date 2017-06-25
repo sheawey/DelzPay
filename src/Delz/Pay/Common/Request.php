@@ -12,53 +12,11 @@ use Delz\Pay\Common\Exception\InvalidRequestException;
  */
 abstract class Request implements IRequest
 {
-    /**
-     * @var array
-     */
-    protected $parameters = [];
+    use ParameterAware;
 
     public function __construct(array $parameters= [])
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $value
-     */
-    public function setParameter($key, $value)
-    {
-        $this->parameters[$key] = $value;
-    }
-
-    /**
-     * @param string $key
-     * @return mixed|null
-     */
-    public function getParameter($key)
-    {
-        if ($this->hasParameter($key)) {
-            return $this->parameters[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $key
-     * @return bool
-     */
-    public function hasParameter($key)
-    {
-        return isset($this->parameters[$key]);
     }
 
     /**
