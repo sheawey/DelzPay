@@ -2,6 +2,8 @@
 
 namespace Delz\Pay\Alipay;
 
+use Delz\Pay\Alipay\Message\CreatePayOrderRequest;
+
 /**
  * 条码支付
  *
@@ -14,7 +16,7 @@ class BarCodeGateway extends Gateway
      */
     public function purchase(array $parameters = [])
     {
-        return $this->createRequest('Delz\Pay\Alipay\Message\CreatePayOrderRequest', $parameters);
+        return $this->createRequest(CreatePayOrderRequest::class, $parameters);
     }
 
 

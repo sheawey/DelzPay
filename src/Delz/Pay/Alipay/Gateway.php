@@ -48,4 +48,12 @@ class Gateway extends BaseGateway
         $this->setParameter('private_key', $privateKey);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function query(array $parameters = [])
+    {
+
+    }
+
 }
