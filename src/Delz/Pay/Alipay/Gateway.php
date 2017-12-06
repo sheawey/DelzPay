@@ -3,6 +3,7 @@
 namespace Delz\Pay\Alipay;
 
 use Delz\Pay\Common\Gateway as BaseGateway;
+use Delz\Pay\Alipay\Message\QueryOrderRequest;
 
 /**
  * 支付宝抽象类
@@ -53,7 +54,7 @@ class Gateway extends BaseGateway
      */
     public function query(array $parameters = [])
     {
-
+        return $this->createRequest(QueryOrderRequest::class, $parameters);
     }
 
 }
