@@ -3,10 +3,11 @@
 namespace Delz\Pay\Alipay;
 
 /**
- * 电脑网站支付
+ * 扫码支付
  *
  * @package Delz\Pay\Alipay
  */
-class PageGateway extends Gateway
+class ScanGateway extends Gateway
 {
+
 }
