@@ -31,6 +31,10 @@ class CreateOrderResponse extends Response
         if ($this->data['trade_type'] == 'JSAPI') {
             return $this->getJsData();
         }
+
+        if ($this->data['trade_type'] == 'NATIVE') {
+            return $this->data;
+        }
     }
 
     /**
