@@ -32,7 +32,8 @@ class CloseOrderRequest extends Request
             'out_trade_no',
             'charset',
             'sign_type',
-            'private_key'
+            'private_key',
+            'public_key'
         );
 
         if (is_null($this->getTradeNo() && is_null($this->getOutTradeNo()))) {
@@ -73,7 +74,7 @@ class CloseOrderRequest extends Request
         $response = Http::post(self::GATEWAY_URL, ['form_params' => $this->getData()]);
         //支付宝默认返回是GBK编码，所以转化
         $body = iconv('GBK', 'UTF-8//IGNORE', $response->getBody());
-        $data = json_decode($body, true);print_r($data);
+        $data = json_decode($body, true);
 
         return new CloseOrderResponse($this, $data);
     }

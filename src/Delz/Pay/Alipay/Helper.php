@@ -9,6 +9,9 @@ namespace Delz\Pay\Alipay;
  */
 class Helper
 {
+    const KEY_TYPE_PUBLIC = 1; //公钥
+    const KEY_TYPE_PRIVATE = 2; //私钥
+
     /**
      * 将数组形式的支付业务参数转化成json格式的字符串
      *
@@ -60,7 +63,7 @@ class Helper
                 break;
         }
 
-        $key = self::formatPrivateKey($key);
+        $key = self::format($key, self::KEY_TYPE_PRIVATE);
 
         $privateId = openssl_pkey_get_private($key);
 
@@ -74,12 +77,52 @@ class Helper
 
 
     /**
-     * 格式化私钥
+     * 验签
      *
-     * @param string $key 私钥或私钥文件路径
+     * @param array $parameters 要验签的参数
+     * @param string $sign 签名
+     * @param string $key 公钥
+     * @param string $type 类型
+     * @return bool
+     */
+    public static function verifySign(array $parameters, $sign, $key, $type = 'RSA2')
+    {
+        switch ($type) {
+            case 'RSA2':
+                $alg = OPENSSL_ALGO_SHA256;
+                break;
+            case 'RSA':
+                $alg = OPENSSL_ALGO_SHA1;
+                break;
+            default:
+                throw new \InvalidArgumentException(
+                    sprintf('Sign type of "%s" is not support.', $type)
+                );
+                break;
+        }
+
+        //待签名的字符串
+        $signStr = json_encode($parameters, JSON_UNESCAPED_UNICODE);
+        //阿里云接口的编码是GBK
+        $signStr = iconv('UTF-8','GBK//IGNORE', $signStr);
+        $key = self::format($key, self::KEY_TYPE_PUBLIC);
+        $privateId = openssl_pkey_get_public($key);
+        $result = (bool)openssl_verify($signStr, base64_decode($sign), $privateId, $alg);
+        openssl_free_key($privateId);
+
+        return $result;
+
+    }
+
+
+    /**
+     * 格式化私钥或者公钥
+     *
+     * @param string $key 密钥或密钥文件路径
+     * @param int $type 密钥类型：公钥、私钥
      * @return string
      */
-    private static function formatPrivateKey($key)
+    private static function format($key, $type = self::KEY_TYPE_PUBLIC)
     {
         if (is_file($key)) {
             return file_get_contents($key);
@@ -87,13 +130,23 @@ class Helper
 
         if (is_string($key) && strpos($key, '-----') === false) {
             $keyLines = [];
-            $keyLines[] = '-----BEGIN RSA PRIVATE KEY-----';
+            if ($type == self::KEY_TYPE_PUBLIC) {
+                $keyLines[] = '-----BEGIN PUBLIC KEY-----';
+            } else {
+                $keyLines[] = '-----BEGIN RSA PRIVATE KEY-----';
+            }
+
             $i = 0;
             while ($keyStr = substr($key, $i * 64, 64)) {
                 $keyLines[] = $keyStr;
                 $i++;
             }
-            $keyLines[] = '-----END RSA PRIVATE KEY-----';
+            if ($type == self::KEY_TYPE_PUBLIC) {
+                $keyLines[] = '-----END PUBLIC KEY-----';
+            } else {
+                $keyLines[] = '-----END RSA PRIVATE KEY-----';
+            }
+
 
             return implode("\n", $keyLines);
 

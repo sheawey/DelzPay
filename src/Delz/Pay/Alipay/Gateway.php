@@ -51,6 +51,24 @@ class Gateway extends BaseGateway
     }
 
     /**
+     * 公钥或公钥文件路径
+     *
+     * @return string
+     */
+    public function getPublicKey()
+    {
+        return $this->getParameter('public_key');
+    }
+
+    /**
+     * @param string $publicKey 公钥或公钥文件路径
+     */
+    public function setPublicKey($publicKey)
+    {
+        $this->setParameter('public_key', $publicKey);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function query(array $parameters = [])

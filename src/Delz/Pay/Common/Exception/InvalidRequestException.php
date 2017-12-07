@@ -9,7 +9,7 @@ namespace Delz\Pay\Common\Exception;
  *
  * @package Delz\Pay\Common\Exception
  */
-class InvalidRequestException extends \InvalidArgumentException
+class InvalidRequestException extends PayException
 {
 
 }

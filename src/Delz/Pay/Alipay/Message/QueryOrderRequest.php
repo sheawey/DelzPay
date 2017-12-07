@@ -30,7 +30,8 @@ class QueryOrderRequest extends Request
             'app_id',
             'charset',
             'sign_type',
-            'private_key'
+            'private_key',
+            'public_key'
         );
 
         if (is_null($this->getTradeNo() && is_null($this->getOutTradeNo()))) {

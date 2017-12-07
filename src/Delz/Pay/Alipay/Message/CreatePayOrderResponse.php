@@ -18,6 +18,7 @@ class CreatePayOrderResponse extends Response
     {
         $this->request = $request;
         $this->data = $data['alipay_trade_pay_response'];
+        $this->checkSign($data['sign']);
     }
 
     /**

@@ -32,7 +32,8 @@ class CreatePayOrderRequest extends Request
             'total_amount',
             'charset',
             'sign_type',
-            'private_key'
+            'private_key',
+            'public_key'
         );
 
         $data = [

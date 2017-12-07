@@ -2,8 +2,8 @@
 
 namespace Delz\Pay\Alipay\Message;
 
+use Delz\Pay\Common\Exception\InvalidRequestException;
 use Delz\Pay\Common\Request as BaseRequest;
-use Delz\Pay\Common\Exception\PayException;
 
 /**
  * 支付宝请求抽象类
@@ -51,6 +51,16 @@ abstract class Request extends BaseRequest
     public function getPrivateKey()
     {
         return $this->getParameter('private_key');
+    }
+
+    /**
+     * 公钥或公钥文件路径
+     *
+     * @return string
+     */
+    public function getPublicKey()
+    {
+        return $this->getParameter('public_key');
     }
 
     /**
@@ -122,13 +132,13 @@ abstract class Request extends BaseRequest
      * 设置商户生成签名字符串所使用的签名算法类型，目前支持RSA2和RSA
      *
      * @param string $signType
-     * @throws \InvalidArgumentException
+     * @throws InvalidRequestException
      */
     public function setSignType($signType)
     {
         $signType = strtoupper($signType);
         if(!in_array($signType,['RSA2','RSA'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidRequestException(
                 sprintf('Invalid sign type: "%s". Only support "RSA2" or "RSA".', $signType)
             );
         }

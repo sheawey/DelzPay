@@ -18,6 +18,7 @@ class QueryOrderResponse extends Response
     {
         $this->request = $request;
         $this->data = $data['alipay_trade_query_response'];
+        $this->checkSign($data['sign']);
     }
 
     /**
@@ -25,7 +26,7 @@ class QueryOrderResponse extends Response
      */
     public function isSuccessful()
     {
-        return $this->data['msg'] == 'Success' && $this->data['code'] == '10000' && ($this->data['trade_status'] == 'TRADE_SUCCESS' || $this->data['trade_status'] == 'TRADE_FINISHED');
+        return $this->isSignOk && $this->data['msg'] == 'Success' && $this->data['code'] == '10000' && ($this->data['trade_status'] == 'TRADE_SUCCESS' || $this->data['trade_status'] == 'TRADE_FINISHED');
     }
 
     /**
@@ -35,7 +36,7 @@ class QueryOrderResponse extends Response
      */
     public function isWaitingForPay()
     {
-        return isset($this->data['trade_status']) && $this->data['trade_status'] == 'WAIT_BUYER_PAY';
+        return $this->isSignOk && isset($this->data['trade_status']) && $this->data['trade_status'] == 'WAIT_BUYER_PAY';
     }
 
     /**
@@ -47,7 +48,7 @@ class QueryOrderResponse extends Response
      */
     public function isClosed()
     {
-        return isset($this->data['trade_status']) && $this->data['trade_status'] == 'TRADE_CLOSED';
+        return $this->isSignOk && isset($this->data['trade_status']) && $this->data['trade_status'] == 'TRADE_CLOSED';
     }
 
     /**
@@ -59,6 +60,6 @@ class QueryOrderResponse extends Response
      */
     public function isFinished()
     {
-        return isset($this->data['trade_status']) && $this->data['trade_status'] == 'TRADE_FINISHED';
+        return $this->isSignOk && isset($this->data['trade_status']) && $this->data['trade_status'] == 'TRADE_FINISHED';
     }
 }

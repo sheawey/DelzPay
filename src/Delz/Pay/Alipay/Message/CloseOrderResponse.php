@@ -18,5 +18,6 @@ class CloseOrderResponse extends Response
     {
         $this->request = $request;
         $this->data = $data['alipay_trade_close_response'];
+        $this->checkSign($data['sign']);
     }
 }
