@@ -5,6 +5,7 @@ namespace Delz\Pay\Alipay;
 use Delz\Pay\Common\Gateway as BaseGateway;
 use Delz\Pay\Alipay\Message\QueryOrderRequest;
 use Delz\Pay\Alipay\Message\CloseOrderRequest;
+use Delz\Pay\Alipay\Message\RefundRequest;
 
 /**
  * 支付宝抽象类
@@ -82,6 +83,14 @@ class Gateway extends BaseGateway
     public function close(array $parameters = [])
     {
         return $this->createRequest(CloseOrderRequest::class, $parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function refund(array $parameters = [])
+    {
+        return $this->createRequest(RefundRequest::class, $parameters);
     }
 
 
