@@ -4,7 +4,6 @@ namespace Delz\Pay\Alipay\Message;
 
 use Delz\Pay\Common\Response as BaseResponse;
 use Delz\Pay\Alipay\Helper;
-use Delz\Pay\Common\Contract\IRequest;
 
 /**
  * 支付宝请求Response抽象类

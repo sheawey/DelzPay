@@ -6,6 +6,7 @@ use Delz\Pay\Common\Gateway as BaseGateway;
 use Delz\Pay\Alipay\Message\QueryOrderRequest;
 use Delz\Pay\Alipay\Message\CloseOrderRequest;
 use Delz\Pay\Alipay\Message\RefundRequest;
+use Delz\Pay\Alipay\Message\QueryRefundRequest;
 
 /**
  * 支付宝抽象类
@@ -91,6 +92,14 @@ class Gateway extends BaseGateway
     public function refund(array $parameters = [])
     {
         return $this->createRequest(RefundRequest::class, $parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function queryRefund(array $parameters = [])
+    {
+        return $this->createRequest(QueryRefundRequest::class, $parameters);
     }
 
 

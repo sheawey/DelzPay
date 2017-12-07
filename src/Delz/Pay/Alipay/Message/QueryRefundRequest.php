@@ -2,25 +2,24 @@
 
 namespace Delz\Pay\Alipay\Message;
 
-use Delz\Common\Util\Http;
 use Delz\Pay\Alipay\Helper;
+use Delz\Common\Util\Http;
 use Delz\Pay\Common\Exception\InvalidRequestException;
 
 /**
- * 退款请求类
+ * 退款结果查询请求类
  *
  * @package Delz\Pay\Alipay\Message
  */
-class RefundRequest extends Request
+class QueryRefundRequest extends Request
 {
     /**
      * {@inheritdoc}
      */
     public function getMethod()
     {
-        return 'alipay.trade.refund';
+        return 'alipay.trade.fastpay.refund.query';
     }
-
 
     /**
      * {@inheritdoc}
@@ -29,9 +28,9 @@ class RefundRequest extends Request
     {
         $this->checkRequired(
             'app_id',
-            'refund_amount',
             'charset',
             'sign_type',
+            'out_request_no',
             'private_key',
             'public_key'
         );
@@ -51,12 +50,7 @@ class RefundRequest extends Request
             'biz_content' => [
                 'out_trade_no' => $this->getOutTradeNo(),
                 'trade_no' => $this->getTradeNo(),
-                'refund_amount' => $this->getRefundAmount(),
-                'refund_reason'=> $this->getRefundReason(),
-                'out_request_no' => $this->getOutRequestNo(),
-                'operator_id' => $this->getOperatorId(),
-                'store_id' => $this->getStoreId(),
-                'terminal_id' => $this->getTerminalId()
+                'out_request_no' => $this->getOutRequestNo()
             ]
         ];
 
@@ -81,7 +75,7 @@ class RefundRequest extends Request
         $body = iconv('GBK', 'UTF-8//IGNORE', $response->getBody());
         $data = json_decode($body, true);
 
-        return new RefundResponse($this, $data);
+        return new QueryRefundResponse($this, $data);
     }
 
     /**
@@ -123,44 +117,6 @@ class RefundRequest extends Request
     }
 
     /**
-     * 需要退款的金额
-     *
-     * 该金额不能大于订单金额,单位为元，支持两位小数
-     *
-     * @return float
-     */
-    public function getRefundAmount()
-    {
-        return $this->getParameter('refund_amount');
-    }
-
-    /**
-     * @param float $refundAmount 需要退款的金额
-     */
-    public function setRefundAmount($refundAmount)
-    {
-        $this->setParameter('refund_amount', $refundAmount);
-    }
-
-    /**
-     * 退款的原因说明
-     *
-     * @return string
-     */
-    public function getRefundReason()
-    {
-        return $this->getParameter('refund_reason');
-    }
-
-    /**
-     * @param string $refundReason 退款的原因说明
-     */
-    public function setRefundReason($refundReason)
-    {
-        $this->setParameter('refund_reason', $refundReason);
-    }
-
-    /**
      * 商户退款单号
      *
      * 同一笔交易多次退款需要保证唯一，如需部分退款，则此参数必传。
@@ -178,59 +134,5 @@ class RefundRequest extends Request
     public function setOutRequestNo($outRequestNo)
     {
         $this->setParameter('out_request_no', $outRequestNo);
-    }
-
-    /**
-     * 商户操作员编号
-     *
-     * @return string
-     */
-    public function getOperatorId()
-    {
-        return $this->getParameter('operator_id');
-    }
-
-    /**
-     * @param string $operatorId 商户操作员编号
-     */
-    public function setOperatorId($operatorId)
-    {
-        $this->setParameter('operator_id', $operatorId);
-    }
-
-    /**
-     * 商户门店编号
-     *
-     * @return string
-     */
-    public function getStoreId()
-    {
-        return $this->getParameter('store_id');
-    }
-
-    /**
-     * @param string $storeId 商户门店编号
-     */
-    public function setStoreId($storeId)
-    {
-        $this->setParameter('store_id', $storeId);
-    }
-
-    /**
-     * 商户机具终端编号
-     *
-     * @return string
-     */
-    public function getTerminalId()
-    {
-        return $this->getParameter('terminal_id');
-    }
-
-    /**
-     * @param string $terminalId 商户机具终端编号
-     */
-    public function setTerminalId($terminalId)
-    {
-        $this->setParameter('terminal_id', $terminalId);
     }
 }

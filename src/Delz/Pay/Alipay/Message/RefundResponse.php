@@ -20,4 +20,12 @@ class RefundResponse extends Response
         $this->data = $data['alipay_trade_refund_response'];
         $this->checkSign($data['sign']);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSuccessful()
+    {
+        return $this->isSignOk && $this->data['msg'] == 'Success' && $this->data['code'] == '10000' && isset($this->data['trade_no']);
+    }
 }

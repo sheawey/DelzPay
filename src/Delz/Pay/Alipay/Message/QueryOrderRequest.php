@@ -48,7 +48,8 @@ class QueryOrderRequest extends Request
             'version' => $this->getVersion(),
             'biz_content' => [
                 'out_trade_no' => $this->getOutTradeNo(),
-                'trade_no' => $this->getTradeNo()
+                'trade_no' => $this->getTradeNo(),
+                'out_request_no' => $this->getOutTradeNo()
             ]
         ];
 
