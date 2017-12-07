@@ -2,6 +2,8 @@
 
 namespace Delz\Pay\Alipay;
 
+use Delz\Pay\Alipay\Message\CreateWaveCodeOrderRequest;
+
 /**
  * 声波支付
  *
@@ -14,6 +16,6 @@ class WaveCodeGateway extends BarCodeGateway
      */
     public function purchase(array $parameters = [])
     {
-        return $this->createRequest('Delz\Pay\Alipay\Message\CreateWaveCodeOrderRequest', $parameters);
+        return $this->createRequest(CreateWaveCodeOrderRequest::class, $parameters);
     }
 }
