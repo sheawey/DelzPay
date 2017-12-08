@@ -13,6 +13,12 @@ class Helper
     const KEY_TYPE_PRIVATE = 2; //私钥
 
     /**
+     * 验签的内容格式类型
+     */
+    const TYPE_VERIFY_CONTENT_JSON = 1; //JSON
+    const TYPE_VERIFY_CONTENT_QUERY = 2; //QUERY url拼接型
+
+    /**
      * 将数组形式的支付业务参数转化成json格式的字符串
      *
      * @param array $bizContent 支付业务参数
@@ -83,9 +89,10 @@ class Helper
      * @param string $sign 签名
      * @param string $key 公钥
      * @param string $type 类型
+     * @param int $contentType 内容类型
      * @return bool
      */
-    public static function verifySign(array $parameters, $sign, $key, $type = 'RSA2')
+    public static function verifySign(array $parameters, $sign, $key, $type = 'RSA2', $contentType = self::TYPE_VERIFY_CONTENT_JSON)
     {
         switch ($type) {
             case 'RSA2':
@@ -101,8 +108,17 @@ class Helper
                 break;
         }
 
+        unset($parameters['sign']);
+        unset($parameters['sign_type']);
+
         //待签名的字符串
-        $signStr = json_encode($parameters, JSON_UNESCAPED_UNICODE);
+        if($contentType == self::TYPE_VERIFY_CONTENT_JSON) {
+            $signStr = json_encode($parameters, JSON_UNESCAPED_UNICODE);
+        } else {
+            ksort($parameters);
+            $signStr = http_build_query($parameters);
+        }
+
         //阿里云接口的编码是GBK
         $signStr = iconv('UTF-8','GBK//IGNORE', $signStr);
         $key = self::format($key, self::KEY_TYPE_PUBLIC);

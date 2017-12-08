@@ -7,6 +7,7 @@ use Delz\Pay\Alipay\Message\QueryOrderRequest;
 use Delz\Pay\Alipay\Message\CloseOrderRequest;
 use Delz\Pay\Alipay\Message\RefundRequest;
 use Delz\Pay\Alipay\Message\QueryRefundRequest;
+use Delz\Pay\Alipay\Message\NotifyResponse;
 
 /**
  * 支付宝抽象类
@@ -100,6 +101,17 @@ class Gateway extends BaseGateway
     public function queryRefund(array $parameters = [])
     {
         return $this->createRequest(QueryRefundRequest::class, $parameters);
+    }
+
+    /**
+     * 异步通知
+     *
+     * @param array $parameters
+     * @return NotifyResponse
+     */
+    public function notify(array $parameters = [])
+    {
+        return new NotifyResponse($this, $parameters);
     }
 
 
