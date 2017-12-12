@@ -116,7 +116,7 @@ class Helper
             $signStr = json_encode($parameters, JSON_UNESCAPED_UNICODE);
         } else {
             ksort($parameters);
-            $signStr = http_build_query($parameters);
+            $signStr = urldecode(http_build_query($parameters));
         }
 
         //阿里云接口的编码是GBK
