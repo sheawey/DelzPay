@@ -18,6 +18,4 @@ class BarCodeGateway extends Gateway
     {
         return $this->createRequest(CreatePayOrderRequest::class, $parameters);
     }
-
-
 }

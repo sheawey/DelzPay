@@ -6,21 +6,12 @@ use Delz\Pay\Alipay\Helper;
 use Delz\Common\Util\Http;
 
 /**
- * PC场景下单请求类
+ * 手机网站支付请求类
  *
  * @package Delz\Pay\Alipay\Message
  */
-class CreatePageOrderRequest extends Request
+class CreateWapOrderRequest extends Request
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getMethod()
-    {
-        return 'alipay.trade.page.pay';
-    }
-
-
     /**
      * {@inheritdoc}
      */
@@ -29,7 +20,6 @@ class CreatePageOrderRequest extends Request
         $this->checkRequired(
             'app_id',
             'out_trade_no',
-            'notify_url',
             'total_amount',
             'charset',
             'sign_type',
@@ -48,11 +38,12 @@ class CreatePageOrderRequest extends Request
             'notify_url' => $this->getNotifyUrl(),
             'return_url' => $this->getReturnUrl(),
             'biz_content' => [
-                'out_trade_no' => $this->getOutTradeNo(),
                 'product_code' => $this->getProductCode(),
+                'out_trade_no' => $this->getOutTradeNo(),
                 'subject' => $this->getSubject(),
                 'total_amount' => $this->getTotalAmount(),
                 'body' => $this->getBody(),
+                'store_id' => $this->getStoreId(),
                 'timeout_express' => $this->getTimeoutExpress()
             ]
         ];
@@ -73,15 +64,17 @@ class CreatePageOrderRequest extends Request
      */
     public function send()
     {
-        $html = '<form name="aliform" method="post" action="' . self::GATEWAY_URL . '">';
-        foreach ($this->getData() as $k => $v) {
-            $html .= '<input type="hidden" name="' . $k . '" value="' . $v . '"';
-        }
-        $html .= '</form>';
+        $response = Http::post(self::GATEWAY_URL, ['form_params' => $this->getData()]);
+        echo $response->getBody();
+        return;
+    }
 
-        $html .= '<script language=\"javascript\">document.aliform.submit();</script>';
-
-        return $html;
+    /**
+     * {@inheritdoc}
+     */
+    public function getMethod()
+    {
+        return 'alipay.trade.wap.pay';
     }
 
     /**
@@ -104,36 +97,6 @@ class CreatePageOrderRequest extends Request
     public function getOutTradeNo()
     {
         return $this->getParameter('out_trade_no');
-    }
-
-    /**
-     * @param string $returnUrl 支付宝服务器主动通知商户服务器里指定的页面http/https路径。
-     */
-    public function setReturnUrl($returnUrl)
-    {
-        $this->setParameter('return_url', $returnUrl);
-    }
-
-    /**
-     * 支付宝服务器主动通知商户服务器里指定的页面http/https路径。
-     *
-     * @return string|null
-     */
-    public function getReturnUrl()
-    {
-        return $this->getParameter('return_url');
-    }
-
-    /**
-     * 销售产品码，与支付宝签约的产品码名称。
-     *
-     * 目前仅支持FAST_INSTANT_TRADE_PAY
-     *
-     * @return string
-     */
-    public function getProductCode()
-    {
-        return 'FAST_INSTANT_TRADE_PAY';
     }
 
     /**
@@ -193,6 +156,24 @@ class CreatePageOrderRequest extends Request
     }
 
     /**
+     * 商户门店编号
+     *
+     * @return string
+     */
+    public function getStoreId()
+    {
+        return $this->getParameter('store_id');
+    }
+
+    /**
+     * @param string $storeId 商户门店编号
+     */
+    public function setStoreId($storeId)
+    {
+        $this->setParameter('store_id', $storeId);
+    }
+
+    /**
      * 订单允许的最晚付款时间
      *
      * 取值范围：1m～15d。
@@ -214,4 +195,33 @@ class CreatePageOrderRequest extends Request
     {
         $this->setParameter('timeout_express', $timeoutExpress);
     }
+
+    /**
+     * @param string $returnUrl 支付宝服务器主动通知商户服务器里指定的页面http/https路径。
+     */
+    public function setReturnUrl($returnUrl)
+    {
+        $this->setParameter('return_url', $returnUrl);
+    }
+
+    /**
+     * 支付宝服务器主动通知商户服务器里指定的页面http/https路径。
+     *
+     * @return string|null
+     */
+    public function getReturnUrl()
+    {
+        return $this->getParameter('return_url');
+    }
+
+    /**
+     * 销售产品码，商家和支付宝签约的产品码。
+     *
+     * @return string
+     */
+    public function getProductCode()
+    {
+        return 'QUICK_WAP_WAY';
+    }
+
 }
