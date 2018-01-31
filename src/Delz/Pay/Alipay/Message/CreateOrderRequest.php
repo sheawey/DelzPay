@@ -44,7 +44,8 @@ class CreateOrderRequest extends Request
                 'operator_id' => $this->getOperatorId(),
                 'store_id' => $this->getStoreId(),
                 'terminal_id' => $this->getTerminalId(),
-                'timeout_express' => $this->getTimeoutExpress()
+                'timeout_express' => $this->getTimeoutExpress(),
+                'buyer_id' => $this->getBuyerId()
             ]
         ];
 
@@ -136,6 +137,24 @@ class CreateOrderRequest extends Request
     public function setSubject($subject)
     {
         $this->setParameter('subject', $subject);
+    }
+
+    /**
+     * 买家的支付宝唯一用户号（2088开头的16位纯数字）
+     *
+     * @return string
+     */
+    public function getBuyerId()
+    {
+        return $this->getParameter('buyer_id');
+    }
+
+    /**
+     * @param string $buyerId 买家的支付宝唯一用户号（2088开头的16位纯数字）
+     */
+    public function setBuyerId($buyerId)
+    {
+        $this->setParameter('buyer_id', $buyerId);
     }
 
     /**
